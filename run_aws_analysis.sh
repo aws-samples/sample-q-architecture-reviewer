@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# AWS Resource-based Analysis Tool
-# Usage: ./run_resource_analysis.sh [analysis_type] [options]
+# AWS Analysis Tool
+# Usage: ./run_aws_analysis.sh [analysis_type] [options]
 
 set -e
 
@@ -18,7 +18,7 @@ DEFAULT_LANG="en"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 show_help() {
-    echo -e "${BLUE}AWS Resource-based Analysis Tool${NC}"
+    echo -e "${BLUE}AWS Analysis Tool${NC}"
     echo ""
     echo "Usage: $0 [analysis_type] [options]"
     echo ""
@@ -44,8 +44,10 @@ execute_analysis() {
     local region="$2"
     local lang="$3"
     
-    local prompt_file="${SCRIPT_DIR}/prompts/${lang}/${analysis_type}.md"
+    local prompt_file="${SCRIPT_DIR}/prompts/${lang}/aws_${analysis_type}.md"
     local output_dir="${SCRIPT_DIR}/output/${analysis_type}"
+    local timestamp=$(date "+%F %T %Z(%z)")
+    local system_prompt="Use current timestamp:${timestamp} **Critical Guidelines** 1/Use ONLY the use_aws tool to query and analyze actual AWS resources in ${region} region 2/DO NOT execute or generate any shell scripts, bash commands, or external tools 3/Ensure report consistency: content, resources, findings must match exactly with actual AWS environment queried via use_aws tool 4/NEVER use placeholder or example data - use real resource IDs, configurations, and settings obtained from use_aws tool 5/Validate report accuracy post-completion especially file timestamp(year and datetime) must reflect report creation year and datetime 6/Save the file with this format in the ${output_dir}/aws_${analysis_type}_${region}_{YYYYMMDD_HHMMSS}.html. The timezone must follow current system timezone."
     
     mkdir -p "$output_dir"
     
@@ -82,11 +84,13 @@ execute_analysis() {
     
     # Generate prompt content with region substitution
     local prompt_content
-    prompt_content=$(sed "s/{REGION}/$region/g" "$prompt_file")
+    prompt_content=$(cat "$prompt_file" | tr '\n' ' ')
+    prompt_content=$(sed "s/{REGION}/$region/g" <<< "$prompt_content")
+    prompt_content+=" ${system_prompt}"
     
     # Send prompt to Amazon Q CLI
     echo "Prompt: $prompt_content"
-    echo "$prompt_content" | q chat --trust-all-tools
+    printf "%s" "$prompt_content" | q chat --trust-all-tools
     
     if [ $? -eq 0 ]; then
         echo ""
@@ -131,7 +135,7 @@ done
 
 # Interactive menu if no analysis type specified
 if [[ -z "$ANALYSIS_TYPE" ]]; then
-    echo -e "${BLUE}AWS Resource-based Analysis Tool${NC}"
+    echo -e "${BLUE}AWS Analysis Tool${NC}"
     echo ""
     echo "Select analysis type:"
     echo "1. Security Assessment"

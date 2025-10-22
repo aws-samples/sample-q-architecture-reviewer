@@ -84,7 +84,7 @@ execute_analysis() {
     prompt_content+=${system_prompt}
     # Send prompt to Amazon Q CLI (single line)
     echo "Prompt: $prompt_content"
-    printf "%s" "$prompt_content\n double check generated report have no issues(file existing check, rendering problem, data inconsistency, issue finding counts - comparing to service screener report)" | q chat --trust-all-tools
+    printf "%s" "$prompt_content" | q chat --trust-all-tools
     
     if [ $? -eq 0 ]; then
         echo ""

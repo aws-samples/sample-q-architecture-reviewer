@@ -5,8 +5,8 @@ A simplified AWS architecture analysis tool with two main analysis paths and lan
 ## 🚀 Quick Start
 
 ```bash
-# Resource-based analysis (no external files needed)
-./run_resource_analysis.sh
+# AWS resource-based analysis (no external files needed)
+./run_aws_analysis.sh
 
 # Service Screener analysis (requires Service Screener output files)
 ./run_service_screener_analysis.sh
@@ -16,21 +16,21 @@ A simplified AWS architecture analysis tool with two main analysis paths and lan
 
 ```
 sample-q-architecture-reviewer/
-├── run_resource_analysis.sh          # AWS resource-based analysis
+├── run_aws_analysis.sh               # AWS resource-based analysis
 ├── run_service_screener_analysis.sh  # Service Screener output analysis
 ├── prompts/                          # Analysis prompts
 │   ├── en/                          # English prompts
-│   │   ├── security.md
-│   │   ├── well-architected.md
-│   │   ├── architecture.md
-│   │   ├── modernization.md
+│   │   ├── aws_security.md
+│   │   ├── aws_well-architected.md
+│   │   ├── aws_architecture.md
+│   │   ├── aws_modernization.md
 │   │   ├── service_screener_review.md
 │   │   └── service_screener_ship.md
 │   └── kr/                          # Korean prompts
-│       ├── security.md
-│       ├── well-architected.md
-│       ├── architecture.md
-│       ├── modernization.md
+│       ├── aws_security.md
+│       ├── aws_well-architected.md
+│       ├── aws_architecture.md
+│       ├── aws_modernization.md
 │       ├── service_screener_review.md
 │       └── service_screener_ship.md
 └── output/                          # Generated reports
@@ -43,19 +43,19 @@ sample-q-architecture-reviewer/
 
 ## 🛠️ Usage
 
-### Resource-based Analysis
+### AWS Resource Analysis
 
 Analyzes your current AWS resources using AWS credentials:
 
 ```bash
 # Interactive menu
-./run_resource_analysis.sh
+./run_aws_analysis.sh
 
 # Direct analysis
-./run_resource_analysis.sh security -r us-east-1 -l kr
-./run_resource_analysis.sh well-architected -l en
-./run_resource_analysis.sh architecture -r eu-west-1
-./run_resource_analysis.sh modernization -l kr
+./run_aws_analysis.sh security -r us-east-1 -l kr
+./run_aws_analysis.sh well-architected -l en
+./run_aws_analysis.sh architecture -r eu-west-1
+./run_aws_analysis.sh modernization -l kr
 ```
 
 **Analysis Types:**
@@ -89,8 +89,12 @@ Analyzes Service Screener output files:
 ## 📊 Output
 
 All reports are generated as HTML files in the `output/` directory with timestamps:
-- `aws_security_us-east-1_20241021_220223.html`
+- `aws_security_assessment_us-east-1_20241021_220223.html`
+- `aws_well_architected_us-east-1_20241021_220223.html`
+- `aws_architecture_diagram_us-east-1_20241021_220223.html`
+- `aws_modernization_path_us-east-1_20241021_220223.html`
 - `service_screener_review_20241021_220223.html`
+- `service_screener_ship_20241021_220223.html`
 
 ## ⚙️ Prerequisites
 
@@ -100,7 +104,7 @@ All reports are generated as HTML files in the `output/` directory with timestam
 
 ## 🔧 Options
 
-### Resource Analysis Options
+### AWS Analysis Options
 - `-r, --region REGION` - AWS region (default: ap-northeast-2)
 - `-l, --lang LANG` - Language: en/kr (default: en)
 - `-h, --help` - Show help
