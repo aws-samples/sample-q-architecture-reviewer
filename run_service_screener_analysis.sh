@@ -25,6 +25,7 @@ show_help() {
     echo "Analysis Types:"
     echo "  review          Service Screener Well-Architected review"
     echo "  ship            SHIP (Security Health Improvement Program) review"
+    echo "  modern          AI powered Architecture Modernization review"
     echo ""
     echo "Options:"
     echo "  -d, --dir PATH        Service Screener results directory (required)"
@@ -41,10 +42,10 @@ execute_analysis() {
     local screener_dir="$2"
     local lang="$3"
 
-    local system_prompt="**Important** 1/Only analyze the files in the given directory(${screener_dir})** 2/In the report, timestamp must be same with filename and report content 3/ do not manipulate number of findings and resource_id"
     local prompt_file="${SCRIPT_DIR}/prompts/${lang}/service_screener_${analysis_type}.md"
-    local output_dir="${SCRIPT_DIR}/output/service-screener"
-    
+    local output_dir="${SCRIPT_DIR}/output/service-screener/${analysis_type}"
+    local timestamp=$(date "+%F %T %Z(%z)")
+    local system_prompt="Use current timestamp:${timestamp} **Critical Guidelines** 1/Analyze ONLY files in ${screener_dir} 2/Ensure report consistency: content, resources, issues findings, creation datetime must match exactly NEVER manipulate findings count and resource_id in given service screener 4/Validate report accuracy post-completion especially, file timestamp(year and datetime) must reflect report creation year and datetime. 5/Save the file with this format in the ${output_dir}/service_screener_${analysis_type}_{YYYYMMDD_HHMMSS}.html. The timezone must follow current system timezone."
     mkdir -p "$output_dir"
     
     if [[ ! -f "$prompt_file" ]]; then
@@ -83,7 +84,7 @@ execute_analysis() {
     prompt_content+=${system_prompt}
     # Send prompt to Amazon Q CLI (single line)
     echo "Prompt: $prompt_content"
-    printf "%s" "$prompt_content" | q chat --trust-all-tools
+    printf "%s" "$prompt_content\n double check generated report have no issues(file existing check, rendering problem, data inconsistency, issue finding counts - comparing to service screener report)" | q chat --trust-all-tools
     
     if [ $? -eq 0 ]; then
         echo ""
@@ -102,7 +103,7 @@ LANG="$DEFAULT_LANG"
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        review|ship)
+        review|ship|modern)
             ANALYSIS_TYPE="$1"
             shift
             ;;
@@ -133,14 +134,16 @@ if [[ -z "$ANALYSIS_TYPE" ]]; then
     echo "Select analysis type:"
     echo "1. Service Screener Well-Architected Review"
     echo "2. SHIP (Security Health Improvement Program) Review"
-    echo "3. Exit"
+    echo "3. modern AI powered Architecture Modernization review"
+    echo "4. Exit"
     echo ""
-    read -p "Enter choice (1-3): " choice
+    read -p "Enter choice (1-4): " choice
     
     case $choice in
         1) ANALYSIS_TYPE="review" ;;
         2) ANALYSIS_TYPE="ship" ;;
-        3) exit 0 ;;
+        3) ANALYSIS_TYPE="modern" ;;
+        4) exit 0 ;;
         *) echo -e "${RED}Invalid choice${NC}"; exit 1 ;;
     esac
 fi
