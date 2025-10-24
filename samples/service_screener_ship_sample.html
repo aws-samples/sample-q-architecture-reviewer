@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHIP 보안 건전성 개선 보고서 - AWS 계정 123456789012</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background: #f8f9fa; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px; margin-bottom: 30px; text-align: center; }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .header p { font-size: 1.2em; opacity: 0.9; }
+        .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .metric-card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; border-left: 5px solid; }
+        .metric-card.critical { border-left-color: #dc3545; }
+        .metric-card.high { border-left-color: #fd7e14; }
+        .metric-card.medium { border-left-color: #ffc107; }
+        .metric-card.low { border-left-color: #28a745; }
+        .metric-number { font-size: 3em; font-weight: bold; margin-bottom: 10px; }
+        .metric-label { font-size: 1.1em; color: #666; }
+        .section { background: white; margin-bottom: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow: hidden; }
+        .section-header { background: #495057; color: white; padding: 20px; font-size: 1.3em; font-weight: bold; }
+        .section-content { padding: 25px; }
+        .finding-item { border-left: 4px solid; padding: 20px; margin-bottom: 20px; border-radius: 5px; background: #f8f9fa; }
+        .finding-item.high { border-left-color: #dc3545; background: #fff5f5; }
+        .finding-item.medium { border-left-color: #ffc107; background: #fffbf0; }
+        .finding-item.low { border-left-color: #28a745; background: #f0fff4; }
+        .finding-title { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; color: #2c3e50; }
+        .resource-id { font-family: 'Courier New', monospace; background: #e9ecef; padding: 3px 6px; border-radius: 3px; font-size: 0.9em; }
+        .recommendation { background: #e3f2fd; padding: 15px; border-radius: 5px; margin-top: 15px; border-left: 4px solid #2196f3; }
+        .table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .table th, .table td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        .table th { background: #f8f9fa; font-weight: bold; }
+        .severity-high { color: #dc3545; font-weight: bold; }
+        .severity-medium { color: #fd7e14; font-weight: bold; }
+        .severity-low { color: #28a745; font-weight: bold; }
+        .mermaid { text-align: center; margin: 20px 0; }
+        .timeline { position: relative; padding: 20px 0; }
+        .timeline-item { margin-bottom: 30px; padding-left: 40px; position: relative; }
+        .timeline-item::before { content: ''; position: absolute; left: 15px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: #007bff; }
+        .timeline-item::after { content: ''; position: absolute; left: 19px; top: 20px; width: 2px; height: calc(100% + 10px); background: #dee2e6; }
+        .timeline-item:last-child::after { display: none; }
+        .priority-1 { background: #fff5f5; border-left: 4px solid #dc3545; }
+        .priority-2 { background: #fffbf0; border-left: 4px solid #ffc107; }
+        .priority-3 { background: #f0fff4; border-left: 4px solid #28a745; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>🛡️ SHIP 보안 건전성 개선 보고서</h1>
+            <p>AWS 계정 123456789012 | 생성일시: 2025-10-23 14:24:40 KST</p>
+            <p>Service Screener 기반 종합 보안 분석 및 개선 권고사항</p>
+        </div>
+
+        <!-- 요약 대시보드 -->
+        <div class="section">
+            <div class="section-header">📊 보안 위험 요약 대시보드</div>
+            <div class="section-content">
+                <div class="dashboard">
+                    <div class="metric-card critical">
+                        <div class="metric-number" style="color: #dc3545;">154</div>
+                        <div class="metric-label">High 위험 발견사항</div>
+                    </div>
+                    <div class="metric-card high">
+                        <div class="metric-number" style="color: #fd7e14;">263</div>
+                        <div class="metric-label">Medium 위험 발견사항</div>
+                    </div>
+                    <div class="metric-card medium">
+                        <div class="metric-number" style="color: #ffc107;">338</div>
+                        <div class="metric-label">Low 위험 발견사항</div>
+                    </div>
+                    <div class="metric-card low">
+                        <div class="metric-number" style="color: #28a745;">369</div>
+                        <div class="metric-label">보안 관련 총 발견사항</div>
+                    </div>
+                </div>
+                
+                <h3>🎯 핵심 보안 위험 영역</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>서비스</th>
+                            <th>High 위험</th>
+                            <th>Medium 위험</th>
+                            <th>주요 취약점</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>CloudWatch</strong></td>
+                            <td><span class="severity-high">54</span></td>
+                            <td><span class="severity-medium">9</span></td>
+                            <td>로그 보존 정책 미설정</td>
+                        </tr>
+                        <tr>
+                            <td><strong>EC2</strong></td>
+                            <td><span class="severity-high">37</span></td>
+                            <td><span class="severity-medium">46</span></td>
+                            <td>보안 그룹, VPC Flow Log, EBS 스냅샷</td>
+                        </tr>
+                        <tr>
+                            <td><strong>IAM</strong></td>
+                            <td><span class="severity-high">25</span></td>
+                            <td><span class="severity-medium">39</span></td>
+                            <td>Root MFA, 과도한 권한, 키 순환</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RDS</strong></td>
+                            <td><span class="severity-high">12</span></td>
+                            <td><span class="severity-medium">19</span></td>
+                            <td>엔진 버전, Multi-AZ, 삭제 보호</td>
+                        </tr>
+                        <tr>
+                            <td><strong>CloudTrail</strong></td>
+                            <td><span class="severity-high">11</span></td>
+                            <td><span class="severity-medium">3</span></td>
+                            <td>S3 버킷 보안, MFA 삭제, 로깅</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 상세 발견사항 -->
+        <div class="section">
+            <div class="section-header">🔍 High 위험 상세 발견사항 및 해결 방안</div>
+            <div class="section-content">
+                
+                <!-- IAM 보안 위험 -->
+                <div class="finding-item high">
+                    <div class="finding-title">🚨 Critical: Root 계정 MFA 미활성화</div>
+                    <p><strong>리소스 ID:</strong> <span class="resource-id">User::root_id</span></p>
+                    <p><strong>현재 취약 상태:</strong> Root 사용자에 대한 Multi-Factor Authentication(MFA)이 비활성화되어 있습니다.</p>
+                    <p><strong>위험도 산정 근거:</strong> Root 계정은 모든 AWS 서비스와 리소스에 대한 완전한 액세스 권한을 가지므로, MFA 미설정 시 계정 탈취 위험이 극도로 높습니다.</p>
+                    <p><strong>비즈니스 영향도:</strong> 계정 전체 침해, 데이터 유출, 서비스 중단, 금전적 손실 가능성</p>
+                    <div class="recommendation">
+                        <strong>해결 방안:</strong>
+                        <ol>
+                            <li>AWS Console → IAM → Dashboard → "Activate MFA on your root account" 클릭</li>
+                            <li>Virtual MFA device 또는 Hardware MFA device 선택</li>
+                            <li>Google Authenticator 등 TOTP 앱 사용 권장</li>
+                            <li>MFA 설정 완료 후 Root 계정 사용 최소화</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="finding-item high">
+                    <div class="finding-title">⚠️ IAM 사용자 액세스 키 90일 미순환</div>
+                    <p><strong>리소스 ID:</strong> <span class="resource-id">User::sample_user_1</span>, <span class="resource-id">User::sample_user_2</span></p>
+                    <p><strong>현재 취약 상태:</strong> 액세스 키가 90일 이상 순환되지 않아 보안 위험이 증가했습니다.</p>
+                    <p><strong>위험도 산정 근거:</strong> 장기간 사용된 액세스 키는 노출 위험이 높으며, 정기적 순환이 보안 모범 사례입니다.</p>
+                    <p><strong>비즈니스 영향도:</strong> 액세스 키 노출 시 무단 API 호출, 리소스 조작, 데이터 접근 위험</p>
+                    <div class="recommendation">
+                        <strong>해결 방안:</strong>
+                        <ol>
+                            <li>AWS CLI: <code>aws iam list-access-keys --user-name sample_user_1</code></li>
+                            <li>새 액세스 키 생성: <code>aws iam create-access-key --user-name sample_user_1</code></li>
+                            <li>애플리케이션에서 새 키로 업데이트</li>
+                            <li>기존 키 비활성화 후 삭제</li>
+                            <li>90일 주기 자동 순환 정책 구현</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- EC2 보안 위험 -->
+                <div class="finding-item high">
+                    <div class="finding-title">🔒 보안 그룹 과도한 개방</div>
+                    <p><strong>리소스 ID:</strong> <span class="resource-id">SG::sg-0123456789abcdef0</span>, <span class="resource-id">SG::sg-0abcdef123456789a</span></p>
+                    <p><strong>현재 취약 상태:</strong> 모든 포트(0-65535)가 0.0.0.0/0에 개방되어 있습니다.</p>
+                    <p><strong>위험도 산정 근거:</strong> 인터넷에서 모든 포트 접근 가능으로 무차별 공격에 노출</p>
+                    <p><strong>비즈니스 영향도:</strong> 서버 침해, 데이터 유출, DDoS 공격, 서비스 중단</p>
+                    <div class="recommendation">
+                        <strong>해결 방안:</strong>
+                        <ol>
+                            <li>필요한 포트만 개방 (예: HTTP 80, HTTPS 443)</li>
+                            <li>소스 IP 범위를 특정 CIDR로 제한</li>
+                            <li>관리 포트(SSH 22, RDP 3389)는 VPN/Bastion 호스트를 통해서만 접근</li>
+                            <li>AWS CLI: <code>aws ec2 revoke-security-group-ingress --group-id sg-0123456789abcdef0 --protocol all --port 0-65535 --cidr 0.0.0.0/0</code></li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="finding-item high">
+                    <div class="finding-title">📊 VPC Flow Log 미활성화</div>
+                    <p><strong>리소스 ID:</strong> <span class="resource-id">VPC::vpc-0123456789abcdef0</span>, <span class="resource-id">VPC::vpc-0abcdef123456789a</span></p>
+                    <p><strong>현재 취약 상태:</strong> VPC 네트워크 트래픽 로깅이 비활성화되어 있습니다.</p>
+                    <p><strong>위험도 산정 근거:</strong> 네트워크 활동 모니터링 불가로 보안 사고 탐지 및 분석 어려움</p>
+                    <p><strong>비즈니스 영향도:</strong> 보안 사고 대응 지연, 컴플라이언스 위반, 포렌식 분석 불가</p>
+                    <div class="recommendation">
+                        <strong>해결 방안:</strong>
+                        <ol>
+                            <li>VPC Flow Logs 활성화: <code>aws ec2 create-flow-logs --resource-type VPC --resource-ids vpc-0123456789abcdef0 --traffic-type ALL --log-destination-type cloud-watch-logs --log-group-name VPCFlowLogs</code></li>
+                            <li>CloudWatch Logs 그룹 생성 및 보존 기간 설정</li>
+                            <li>S3 버킷으로 장기 보관 설정</li>
+                            <li>VPC Flow Logs 분석을 위한 CloudWatch Insights 쿼리 구성</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- RDS 보안 위험 -->
+                <div class="finding-item high">
+                    <div class="finding-title">🗄️ RDS 엔진 버전 EOL</div>
+                    <p><strong>리소스 ID:</strong> <span class="resource-id">aurora-postgresql::Instance=sample-instance-1</span></p>
+                    <p><strong>현재 취약 상태:</strong> 지원 종료된 PostgreSQL 엔진 버전을 사용 중입니다.</p>
+                    <p><strong>위험도 산정 근거:</strong> 보안 패치 미제공으로 알려진 취약점에 노출</p>
+                    <p><strong>비즈니스 영향도:</strong> 데이터베이스 침해, 데이터 유출, 서비스 중단</p>
+                    <div class="recommendation">
+                        <strong>해결 방안:</strong>
+                        <ol>
+                            <li>지원되는 최신 PostgreSQL 버전으로 업그레이드</li>
+                            <li>업그레이드 전 스냅샷 생성</li>
+                            <li>테스트 환경에서 애플리케이션 호환성 검증</li>
+                            <li>유지보수 창 동안 업그레이드 수행</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- CloudWatch 보안 위험 -->
+                <div class="finding-item high">
+                    <div class="finding-title">📝 CloudWatch Logs 보존 정책 미설정</div>
+                    <p><strong>리소스 ID:</strong> 54개 로그 그룹 (예: <span class="resource-id">Log::/aws-glue/crawlers</span>, <span class="resource-id">Log::/aws/lambda/CompareFaces</span>)</p>
+                    <p><strong>현재 취약 상태:</strong> 로그 보존 기간이 무제한으로 설정되어 비용 증가 및 관리 어려움</p>
+                    <p><strong>위험도 산정 근거:</strong> 로그 비용 급증, 스토리지 관리 복잡성 증가</p>
+                    <p><strong>비즈니스 영향도:</strong> 예상치 못한 비용 증가, 운영 효율성 저하</p>
+                    <div class="recommendation">
+                        <strong>해결 방안:</strong>
+                        <ol>
+                            <li>로그 그룹별 적절한 보존 기간 설정 (예: 30일, 90일, 1년)</li>
+                            <li>AWS CLI: <code>aws logs put-retention-policy --log-group-name /aws-glue/crawlers --retention-in-days 30</code></li>
+                            <li>중요 로그는 S3로 아카이브</li>
+                            <li>자동화된 로그 관리 정책 구현</li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 현재 아키텍처 다이어그램 -->
+        <div class="section">
+            <div class="section-header">🏗️ 현재 아키텍처 보안 상태</div>
+            <div class="section-content">
+                <div class="mermaid">
+                    graph TB
+                        subgraph "AWS Account 123456789012"
+                            subgraph "ap-northeast-2"
+                                subgraph "VPC vpc-0123456789abcdef0"
+                                    subgraph "Public Subnet"
+                                        ELB1[ELB sample-elb-1<br/>❌ HTTP Only]
+                                        ELB2[ELB sample-elb-2<br/>❌ HTTP Only]
+                                    end
+                                    subgraph "Private Subnet"
+                                        EC2_1[EC2 i-0123456789abcdef0<br/>❌ Public IP]
+                                        EC2_2[EC2 i-0abcdef123456789a<br/>❌ Public IP]
+                                        RDS1[RDS sample-instance-1<br/>❌ Old Engine Version]
+                                    end
+                                    subgraph "Security Groups"
+                                        SG1[SG sg-0123456789abcdef0<br/>❌ All Ports Open]
+                                        SG2[SG sg-0abcdef123456789a<br/>❌ All TCP Open]
+                                    end
+                                end
+                                subgraph "EKS Cluster"
+                                    EKS1[EKS sample-eks<br/>❌ Public Endpoint<br/>❌ No Encryption]
+                                end
+                            end
+                            subgraph "Global Services"
+                                IAM1[IAM Root User<br/>❌ No MFA]
+                                IAM2[IAM Users<br/>❌ Old Access Keys]
+                                CF1[CloudFront SAMPLE123456<br/>❌ No WAF]
+                                CT1[CloudTrail<br/>❌ No S3 MFA Delete]
+                            end
+                            subgraph "Monitoring"
+                                CW1[CloudWatch<br/>❌ No Log Retention]
+                                GD1[GuardDuty<br/>✅ Enabled]
+                            end
+                        end
+                        
+                        Internet[Internet<br/>🌐] --> ELB1
+                        Internet --> ELB2
+                        Internet --> EC2_1
+                        Internet --> EC2_2
+                        
+                        style IAM1 fill:#ffebee
+                        style IAM2 fill:#ffebee
+                        style SG1 fill:#ffebee
+                        style SG2 fill:#ffebee
+                        style EKS1 fill:#ffebee
+                        style RDS1 fill:#ffebee
+                        style ELB1 fill:#ffebee
+                        style ELB2 fill:#ffebee
+                        style EC2_1 fill:#ffebee
+                        style EC2_2 fill:#ffebee
+                        style CF1 fill:#ffebee
+                        style CT1 fill:#ffebee
+                        style CW1 fill:#ffebee
+                        style GD1 fill:#e8f5e8
+                </div>
+            </div>
+        </div>
+
+        <!-- 보안 개선 아키텍처 다이어그램 -->
+        <div class="section">
+            <div class="section-header">🛡️ 보안 개선 권장 아키텍처</div>
+            <div class="section-content">
+                <div class="mermaid">
+                    graph TB
+                        subgraph "AWS Account 123456789012"
+                            subgraph "ap-northeast-2"
+                                subgraph "VPC vpc-0123456789abcdef0"
+                                    subgraph "Public Subnet"
+                                        ALB1[ALB with WAF<br/>✅ HTTPS Only<br/>✅ WAF Protection]
+                                        NAT[NAT Gateway<br/>✅ Outbound Only]
+                                    end
+                                    subgraph "Private Subnet"
+                                        EC2_1[EC2 Instances<br/>✅ No Public IP<br/>✅ IMDSv2]
+                                        RDS1[RDS Aurora<br/>✅ Latest Version<br/>✅ Multi-AZ<br/>✅ Encryption]
+                                    end
+                                    subgraph "Security Groups"
+                                        SG1[Restrictive SGs<br/>✅ Specific Ports<br/>✅ Source IP Limits]
+                                    end
+                                    VPC_FL[VPC Flow Logs<br/>✅ Enabled]
+                                end
+                                subgraph "EKS Cluster"
+                                    EKS1[EKS Private<br/>✅ Private Endpoint<br/>✅ Secrets Encryption<br/>✅ Latest Version]
+                                end
+                            end
+                            subgraph "Global Services"
+                                IAM1[IAM Root User<br/>✅ MFA Enabled]
+                                IAM2[IAM Users<br/>✅ Key Rotation<br/>✅ Least Privilege]
+                                CF1[CloudFront<br/>✅ WAF Enabled<br/>✅ HTTPS Only]
+                                CT1[CloudTrail<br/>✅ S3 MFA Delete<br/>✅ KMS Encryption]
+                            end
+                            subgraph "Monitoring & Security"
+                                CW1[CloudWatch<br/>✅ Log Retention Policy<br/>✅ Alarms]
+                                GD1[GuardDuty<br/>✅ Enabled]
+                                SEC1[Security Hub<br/>✅ Enabled]
+                                CONFIG1[Config<br/>✅ Compliance Rules]
+                            end
+                        end
+                        
+                        Internet[Internet<br/>🌐] --> WAF[AWS WAF<br/>✅ DDoS Protection]
+                        WAF --> ALB1
+                        
+                        style IAM1 fill:#e8f5e8
+                        style IAM2 fill:#e8f5e8
+                        style SG1 fill:#e8f5e8
+                        style EKS1 fill:#e8f5e8
+                        style RDS1 fill:#e8f5e8
+                        style ALB1 fill:#e8f5e8
+                        style EC2_1 fill:#e8f5e8
+                        style CF1 fill:#e8f5e8
+                        style CT1 fill:#e8f5e8
+                        style CW1 fill:#e8f5e8
+                        style GD1 fill:#e8f5e8
+                        style SEC1 fill:#e8f5e8
+                        style CONFIG1 fill:#e8f5e8
+                        style VPC_FL fill:#e8f5e8
+                        style WAF fill:#e8f5e8
+                </div>
+            </div>
+        </div>
+
+        <!-- 리소스별 취약점 매핑 테이블 -->
+        <div class="section">
+            <div class="section-header">📋 리소스별 취약점 매핑 테이블</div>
+            <div class="section-content">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>서비스</th>
+                            <th>리소스 ID</th>
+                            <th>취약점</th>
+                            <th>위험도</th>
+                            <th>상태</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>IAM</td>
+                            <td>User::root_id</td>
+                            <td>MFA 미활성화</td>
+                            <td><span class="severity-high">High</span></td>
+                            <td>즉시 조치 필요</td>
+                        </tr>
+                        <tr>
+                            <td>IAM</td>
+                            <td>User::sample_user_1, User::sample_user_2</td>
+                            <td>액세스 키 90일 미순환</td>
+                            <td><span class="severity-high">High</span></td>
+                            <td>즉시 조치 필요</td>
+                        </tr>
+                        <tr>
+                            <td>EC2</td>
+                            <td>SG::sg-0123456789abcdef0</td>
+                            <td>모든 포트 개방</td>
+                            <td><span class="severity-high">High</span></td>
+                            <td>즉시 조치 필요</td>
+                        </tr>
+                        <tr>
+                            <td>EC2</td>
+                            <td>VPC::vpc-0123456789abcdef0</td>
+                            <td>VPC Flow Log 미활성화</td>
+                            <td><span class="severity-high">High</span></td>
+                            <td>즉시 조치 필요</td>
+                        </tr>
+                        <tr>
+                            <td>EKS</td>
+                            <td>Cluster::sample-eks</td>
+                            <td>퍼블릭 엔드포인트, 암호화 미설정</td>
+                            <td><span class="severity-high">High</span></td>
+                            <td>즉시 조치 필요</td>
+                        </tr>
+                        <tr>
+                            <td>RDS</td>
+                            <td>aurora-postgresql::sample-instance</td>
+                            <td>엔진 버전 EOL, Multi-AZ 미설정</td>
+                            <td><span class="severity-high">High</span></td>
+                            <td>계획된 유지보수 필요</td>
+                        </tr>
+                        <tr>
+                            <td>CloudWatch</td>
+                            <td>54개 로그 그룹</td>
+                            <td>로그 보존 정책 미설정</td>
+                            <td><span class="severity-high">High</span></td>
+                            <td>비용 최적화 필요</td>
+                        </tr>
+                        <tr>
+                            <td>CloudTrail</td>
+                            <td>3개 트레일</td>
+                            <td>S3 MFA 삭제 미설정</td>
+                            <td><span class="severity-high">High</span></td>
+                            <td>즉시 조치 필요</td>
+                        </tr>
+                        <tr>
+                            <td>S3</td>
+                            <td>4개 버킷</td>
+                            <td>퍼블릭 액세스 차단 미설정</td>
+                            <td><span class="severity-high">High</span></td>
+                            <td>즉시 조치 필요</td>
+                        </tr>
+                        <tr>
+                            <td>Lambda</td>
+                            <td>4개 함수</td>
+                            <td>30일 미사용 함수</td>
+                            <td><span class="severity-high">High</span></td>
+                            <td>리소스 정리 필요</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 우선순위별 실행 계획 -->
+        <div class="section">
+            <div class="section-header">⏰ 우선순위별 실행 계획 타임라인</div>
+            <div class="section-content">
+                <div class="timeline">
+                    <div class="timeline-item priority-1">
+                        <h3>🚨 즉시 조치 (24시간 이내)</h3>
+                        <ul>
+                            <li><strong>Root 계정 MFA 활성화</strong> - 계정 보안의 최우선 과제</li>
+                            <li><strong>과도하게 개방된 보안 그룹 수정</strong> - 네트워크 보안 강화</li>
+                            <li><strong>S3 퍼블릭 액세스 차단</strong> - 데이터 유출 방지</li>
+                            <li><strong>IAM 액세스 키 순환</strong> - 인증 정보 보안</li>
+                        </ul>
+                        <p><strong>담당자:</strong> 보안팀, 인프라팀 | <strong>예상 소요시간:</strong> 4-8시간</p>
+                    </div>
+
+                    <div class="timeline-item priority-2">
+                        <h3>⚠️ 단기 조치 (1주일 이내)</h3>
+                        <ul>
+                            <li><strong>VPC Flow Logs 활성화</strong> - 네트워크 모니터링 구축</li>
+                            <li><strong>CloudWatch 로그 보존 정책 설정</strong> - 비용 최적화</li>
+                            <li><strong>CloudTrail S3 MFA 삭제 설정</strong> - 감사 로그 보호</li>
+                            <li><strong>EKS 보안 설정 강화</strong> - 컨테이너 보안</li>
+                        </ul>
+                        <p><strong>담당자:</strong> DevOps팀, 보안팀 | <strong>예상 소요시간:</strong> 2-3일</p>
+                    </div>
+
+                    <div class="timeline-item priority-3">
+                        <h3>📋 중기 조치 (1개월 이내)</h3>
+                        <ul>
+                            <li><strong>RDS 엔진 버전 업그레이드</strong> - 계획된 유지보수</li>
+                            <li><strong>Multi-AZ 및 백업 정책 구현</strong> - 고가용성 확보</li>
+                            <li><strong>미사용 리소스 정리</strong> - 비용 최적화</li>
+                            <li><strong>보안 모니터링 자동화</strong> - 지속적 보안 관리</li>
+                        </ul>
+                        <p><strong>담당자:</strong> 전체 팀 | <strong>예상 소요시간:</strong> 2-3주</p>
+                    </div>
+                </div>
+
+                <h3>📊 실행 계획 시각화</h3>
+                <div class="mermaid">
+                    gantt
+                        title SHIP 보안 개선 실행 계획
+                        dateFormat  YYYY-MM-DD
+                        section 즉시 조치
+                        Root MFA 활성화           :crit, done, des1, 2025-10-23, 1d
+                        보안 그룹 수정            :crit, active, des2, 2025-10-23, 1d
+                        S3 퍼블릭 액세스 차단     :crit, des3, after des2, 1d
+                        IAM 키 순환              :crit, des4, after des3, 1d
+                        
+                        section 단기 조치
+                        VPC Flow Logs            :active, des5, 2025-10-24, 3d
+                        CloudWatch 정책          :des6, after des5, 2d
+                        CloudTrail 보안          :des7, after des6, 2d
+                        EKS 보안 강화            :des8, after des7, 3d
+                        
+                        section 중기 조치
+                        RDS 업그레이드           :des9, 2025-11-01, 1w
+                        Multi-AZ 구현            :des10, after des9, 1w
+                        리소스 정리              :des11, after des10, 1w
+                        모니터링 자동화          :des12, after des11, 1w
+                </div>
+            </div>
+        </div>
+
+        <!-- 모니터링 및 지속적 개선 방안 -->
+        <div class="section">
+            <div class="section-header">📈 모니터링 및 지속적 개선 방안</div>
+            <div class="section-content">
+                <h3>🔍 보안 모니터링 체계</h3>
+                <div class="finding-item low">
+                    <div class="finding-title">실시간 보안 모니터링</div>
+                    <ul>
+                        <li><strong>AWS Security Hub</strong> - 중앙 집중식 보안 대시보드</li>
+                        <li><strong>GuardDuty</strong> - 위협 탐지 및 이상 행동 분석</li>
+                        <li><strong>CloudWatch Alarms</strong> - 보안 메트릭 기반 알림</li>
+                        <li><strong>Config Rules</strong> - 컴플라이언스 자동 검사</li>
+                    </ul>
+                </div>
+
+                <h3>📋 정기 보안 점검 체크리스트</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>점검 항목</th>
+                            <th>주기</th>
+                            <th>담당자</th>
+                            <th>도구</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>IAM 액세스 키 순환</td>
+                            <td>90일</td>
+                            <td>보안팀</td>
+                            <td>AWS CLI, IAM Credential Report</td>
+                        </tr>
+                        <tr>
+                            <td>보안 그룹 규칙 검토</td>
+                            <td>월간</td>
+                            <td>네트워크팀</td>
+                            <td>AWS Config, Security Hub</td>
+                        </tr>
+                        <tr>
+                            <td>Service Screener 실행</td>
+                            <td>월간</td>
+                            <td>DevOps팀</td>
+                            <td>Service Screener v2</td>
+                        </tr>
+                        <tr>
+                            <td>취약점 스캔</td>
+                            <td>주간</td>
+                            <td>보안팀</td>
+                            <td>Inspector, GuardDuty</td>
+                        </tr>
+                        <tr>
+                            <td>로그 분석</td>
+                            <td>일간</td>
+                            <td>SOC팀</td>
+                            <td>CloudWatch Insights</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>🎯 KPI 및 성과 지표</h3>
+                <div class="dashboard">
+                    <div class="metric-card low">
+                        <div class="metric-number" style="color: #28a745;">95%</div>
+                        <div class="metric-label">목표 보안 점수</div>
+                    </div>
+                    <div class="metric-card medium">
+                        <div class="metric-number" style="color: #ffc107;">24시간</div>
+                        <div class="metric-label">High 위험 해결 목표</div>
+                    </div>
+                    <div class="metric-card high">
+                        <div class="metric-number" style="color: #fd7e14;">0</div>
+                        <div class="metric-label">Critical 위험 허용치</div>
+                    </div>
+                    <div class="metric-card critical">
+                        <div class="metric-number" style="color: #dc3545;">100%</div>
+                        <div class="metric-label">컴플라이언스 준수율</div>
+                    </div>
+                </div>
+
+                <h3>📞 비상 연락처 및 에스컬레이션</h3>
+                <div class="recommendation">
+                    <ul>
+                        <li><strong>보안 사고 대응팀:</strong> security-incident@company.com</li>
+                        <li><strong>인프라 운영팀:</strong> infrastructure@company.com</li>
+                        <li><strong>DevOps팀:</strong> devops@company.com</li>
+                        <li><strong>24/7 SOC:</strong> +82-2-XXXX-XXXX</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 결론 및 권고사항 -->
+        <div class="section">
+            <div class="section-header">📝 결론 및 권고사항</div>
+            <div class="section-content">
+                <h3>🎯 핵심 요약</h3>
+                <p>Service Screener 분석 결과, AWS 계정 123456789012에서 <strong>154개의 High 위험 보안 이슈</strong>가 발견되었습니다. 
+                특히 IAM 보안, 네트워크 보안, 데이터 보호 영역에서 즉시 조치가 필요한 상황입니다.</p>
+
+                <h3>🚨 최우선 조치 사항</h3>
+                <ol>
+                    <li><strong>Root 계정 MFA 즉시 활성화</strong> - 계정 전체 보안의 기초</li>
+                    <li><strong>과도하게 개방된 보안 그룹 수정</strong> - 네트워크 침입 차단</li>
+                    <li><strong>IAM 액세스 키 순환 정책 구현</strong> - 인증 정보 보안 강화</li>
+                    <li><strong>VPC Flow Logs 활성화</strong> - 네트워크 활동 모니터링</li>
+                </ol>
+
+                <h3>💡 장기적 보안 전략</h3>
+                <ul>
+                    <li>Zero Trust 아키텍처 도입 검토</li>
+                    <li>자동화된 보안 컴플라이언스 체계 구축</li>
+                    <li>정기적인 보안 교육 및 인식 제고</li>
+                    <li>사고 대응 계획(IRP) 수립 및 훈련</li>
+                </ul>
+
+                <div class="recommendation">
+                    <strong>📋 다음 단계:</strong>
+                    <p>이 보고서를 기반으로 보안팀, 인프라팀, DevOps팀이 협력하여 우선순위에 따른 보안 개선 작업을 진행하시기 바랍니다. 
+                    모든 High 위험 이슈는 1주일 이내에 해결하고, 월간 Service Screener 재실행을 통해 개선 효과를 측정하시기 바랍니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 푸터 -->
+        <div style="text-align: center; padding: 20px; color: #666; border-top: 1px solid #ddd; margin-top: 30px;">
+            <p>본 보고서는 AWS Service Screener v2.3.0 결과를 기반으로 생성되었습니다.</p>
+            <p>생성 일시: 2025-10-23 14:24:40 KST | 계정: 123456789012 | 리전: ap-northeast-2, GLOBAL</p>
+            <p>© 2025 SHIP (Security Health Improvement Program) - AWS 보안 건전성 개선 프로그램</p>
+        </div>
+    </div>
+
+    <script>
+        // Mermaid 초기화
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            },
+            gantt: {
+                useMaxWidth: true,
+                leftPadding: 75
+            }
+        });
+
+        // 동적 차트 업데이트
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('SHIP 보안 보고서 로드 완료');
+        });
+    </script>
+</body>
+</html>
