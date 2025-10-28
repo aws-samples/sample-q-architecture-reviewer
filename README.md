@@ -82,11 +82,13 @@ Analyzes Service Screener output files:
 # Direct analysis
 ./run_service_screener_analysis.sh review -d /path/to/screener-results -l en
 ./run_service_screener_analysis.sh ship -d /path/to/results -l kr
+./run_service_screener_analysis.sh modern -d /path/to/results -l en
 ```
 
 **Analysis Types:**
-- `review` - General Well-Architected review
+- `review` - Service Screener Well-Architected review
 - `ship` - SHIP (Security Health Improvement Program) review
+- `modern` - AI powered Architecture Modernization review
 
 ## 🌐 Language Support
 
