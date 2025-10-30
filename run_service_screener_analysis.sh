@@ -44,8 +44,8 @@ execute_analysis() {
 
     local prompt_file="${SCRIPT_DIR}/prompts/${lang}/service_screener_${analysis_type}.md"
     local output_dir="${SCRIPT_DIR}/output/service-screener/${analysis_type}"
-    local timestamp=$(date "+%F %T %Z(%z)")
-    local system_prompt="Use current timestamp:${timestamp} **Critical Guidelines** 1/Analyze ONLY files in ${screener_dir} 2/Ensure report consistency: content, resources, issues findings, creation datetime must match exactly NEVER manipulate findings count and resource_id in given service screener 4/Validate report accuracy post-completion especially, file timestamp(year and datetime) must reflect report creation year and datetime. 5/Save the file with this format in the ${output_dir}/service_screener_${analysis_type}_{YYYYMMDD_HHMMSS}.html. The timezone must follow current system timezone."
+    local timestamp=$(date "+%Y%m%d_%H%M%S")
+    local system_prompt="Critical Analysis Rules: 1. ONLY analyze files in ${screener_dir} - no external data sources 2. Maintain exact consistency: content, resources, issues, findings, creation datetime must match source files 3. NEVER modify findings count or resource_id from original Service Screener data 4. Validate report accuracy - file timestamp must reflect actual report creation time (${timestamp}) 5. Save as: ${output_dir}/service_screener_${analysis_type}_{YYYYMMDD_HHMMSS}.html 6. Use current system timezone for all timestamps 7. Report language: ${lang} 8. Current timestamp for report: ${timestamp}"
     mkdir -p "$output_dir"
     
     if [[ ! -f "$prompt_file" ]]; then
